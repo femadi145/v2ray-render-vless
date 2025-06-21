@@ -1,0 +1,31 @@
+name: Build V2Ray for iOS ARM64
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Clone v2ray-core
+        run: git clone https://github.com/v2fly/v2ray-core.git
+
+      - name: Build for iOS ARM64
+        run: |
+          cd v2ray-core
+          GOOS=darwin GOARCH=arm64 go build -o v2ray-ios ./main
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: v2ray-ios
+          path: v2ray-core/v2ray-ios
