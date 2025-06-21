@@ -25,7 +25,7 @@ jobs:
           GOOS=darwin GOARCH=arm64 CGO_ENABLED=1 go build -v -tags json -o v2ray-ios
 
       - name: Upload binary
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: v2ray-ios-arm64
           path: v2ray-core/v2ray-ios
