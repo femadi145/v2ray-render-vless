@@ -6,26 +6,28 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout source
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: '1.21'
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl unzip golang
 
-      - name: Clone v2ray-core
-        run: git clone https://github.com/v2fly/v2ray-core.git
+      - name: Download v2ray-core source
+        run: |
+          git clone --recursive https://github.com/v2fly/v2ray-core.git
+          cd v2ray-core
+          go mod tidy
 
-      - name: Build for iOS ARM64
+      - name: Build V2Ray for iOS ARM64
         run: |
           cd v2ray-core
-          GOOS=darwin GOARCH=arm64 go build -o v2ray-ios ./main
+          GOOS=ios GOARCH=arm64 go build -o v2ray-arm64-ios ./main
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
         with:
-          name: v2ray-ios
-          path: v2ray-core/v2ray-ios
+          name: v2ray-arm64-ios
+          path: v2ray-core/v2ray-arm64-ios
